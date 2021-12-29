@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_grey">
+
+        <TextView
+            android:id="@+id/stationName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="180dp"
+            android:textColor="@color/black"
+            android:textSize="32sp"
+            app:layout_constraintBottom_toTopOf="@id/tvDate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="StarsHip-1" />
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8sp"
+            android:textColor="@color/grey"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/stationName"
+            tools:text="28.12.2021" />
+
+        <TextView
+            android:id="@+id/tvHeightMass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:text="Height/Mass : "
+            android:textColor="@color/dark_color"
+            app:layout_constraintEnd_toStartOf="@id/tvHeightMassValue"
+            app:layout_constraintStart_toStartOf="@id/stationName"
+            app:layout_constraintTop_toBottomOf="@id/tvDate" />
+
+        <TextView
+            android:id="@+id/tvHeightMassValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey"
+            app:layout_constraintBottom_toBottomOf="@id/tvHeightMass"
+            app:layout_constraintEnd_toEndOf="@id/stationName"
+            app:layout_constraintStart_toEndOf="@id/tvHeightMass"
+            app:layout_constraintTop_toTopOf="@id/tvHeightMass"
+            tools:text="Height/Mass" />
+
+        <TextView
+            android:id="@+id/cost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Cost : "
+            android:textColor="@color/dark_color"
+            app:layout_constraintBottom_toBottomOf="@id/costValue"
+            app:layout_constraintEnd_toStartOf="@id/costValue"
+            app:layout_constraintStart_toStartOf="@id/tvHeightMass"
+            app:layout_constraintTop_toBottomOf="@id/tvHeightMass" />
+
+        <TextView
+            android:id="@+id/costValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/cost"
+            app:layout_constraintEnd_toEndOf="@id/cost"
+            app:layout_constraintStart_toEndOf="@id/cost"
+            tools:text="Cost" />
+
+        <TextView
+            android:id="@+id/position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Last Position: "
+            android:textColor="@color/dark_color"
+            app:layout_constraintStart_toStartOf="@id/cost"
+            app:layout_constraintTop_toBottomOf="@id/cost" />
+
+        <TextView
+            android:id="@+id/positionValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toEndOf="@id/position"
+            app:layout_constraintTop_toBottomOf="@id/cost"
+            tools:text="Position" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

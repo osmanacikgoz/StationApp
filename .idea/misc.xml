@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/osmna/AndroidStudioProjects/StationsApp/app/src/main/res/drawable/ic_baseline_brightness_green_24.xml" value="0.28888888888888886" />
+        <entry key="..\:/Users/osmna/AndroidStudioProjects/StationsApp/app/src/main/res/drawable/ic_baseline_brightness_red_24.xml" value="0.28888888888888886" />
+        <entry key="..\:/Users/osmna/AndroidStudioProjects/StationsApp/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.28888888888888886" />
+        <entry key="..\:/Users/osmna/AndroidStudioProjects/StationsApp/app/src/main/res/drawable/input_border.xml" value="0.28888888888888886" />
+        <entry key="..\:/Users/osmna/AndroidStudioProjects/StationsApp/app/src/main/res/layout/activity_main.xml" value="0.3625" />
+        <entry key="..\:/Users/osmna/AndroidStudioProjects/StationsApp/app/src/main/res/layout/activity_station_detail.xml" value="0.28703703703703703" />
+        <entry key="..\:/Users/osmna/AndroidStudioProjects/StationsApp/app/src/main/res/layout/item_list_station.xml" value="0.3625" />
+        <entry key="..\:/Users/osmna/AndroidStudioProjects/StationsApp/app/src/main/res/layout/station_detail.xml" value="0.3625" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

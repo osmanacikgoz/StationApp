@@ -6,5 +6,4 @@ class SatelliteDetail(
     val firstFlight: String,
     val height: Int,
     val mass: Int
-
 )
