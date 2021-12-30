@@ -3,6 +3,7 @@ package com.osmanacikgoz.stationsapp.ui.main
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import com.osmanacikgoz.stationsapp.R
 import com.osmanacikgoz.stationsapp.databinding.ActivityMainBinding
@@ -11,6 +12,7 @@ import com.osmanacikgoz.stationsapp.ui.detail.StationDetailActivity
 import org.json.JSONArray
 import java.nio.charset.Charset
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,6 +20,8 @@ class MainActivity : AppCompatActivity() {
 
 
     private val stationListModel: ArrayList<Satellite> = ArrayList()
+
+    private var stationAdapter: StationAdapter? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,24 +33,41 @@ class MainActivity : AppCompatActivity() {
 
     private fun initUI() {
         getLoadJsonData()
+        searchStation()
         setAdapter()
 
     }
 
     private fun setAdapter() {
-        val stationAdapter = StationAdapter(stationListModel)
+        stationAdapter = StationAdapter(stationListModel)
         binding.rvStationList.adapter = stationAdapter
 
-        stationAdapter.setOnClickListener(object : StationAdapter.onItemClickListener {
+        stationAdapter?.setOnClickListener(object : StationAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
                 val intent = Intent(this@MainActivity, StationDetailActivity::class.java)
                 intent.putExtra("id", stationListModel[position].id)
-                intent.putExtra("name",stationListModel[position].name)
+                intent.putExtra("name", stationListModel[position].name)
                 startActivity(intent)
             }
 
         })
 
+    }
+
+    private fun searchStation() {
+        binding.etStationSearch.addTextChangedListener {
+            it?.let {
+                setupSearch(it.toString())
+            }
+        }
+    }
+
+    private fun setupSearch(search: String) {
+        val stationList = ArrayList<Satellite>()
+        stationListModel.filterTo(stationList) {
+            it.name.contains(search.toLowerCase())
+        }
+        stationAdapter?.filterList(stationList)
     }
 
     private fun getLoadJsonData() {

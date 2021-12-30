@@ -38,5 +38,10 @@ class StationAdapter(
         return satellite.size
     }
 
+    fun filterList(filter:ArrayList<Satellite>) {
+        satellite = filter
+        notifyDataSetChanged()
+    }
+
 
 }
