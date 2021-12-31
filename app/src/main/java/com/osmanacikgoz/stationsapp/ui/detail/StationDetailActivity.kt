@@ -1,117 +1,83 @@
 package com.osmanacikgoz.stationsapp.ui.detail
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
+import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
+import com.google.gson.Gson
 import com.osmanacikgoz.stationsapp.R
+import com.osmanacikgoz.stationsapp.base.dateConverter
+import com.osmanacikgoz.stationsapp.base.readJson
 import com.osmanacikgoz.stationsapp.databinding.ActivityStationDetailBinding
-import com.osmanacikgoz.stationsapp.model.PositionList
-import com.osmanacikgoz.stationsapp.model.Positions
-import com.osmanacikgoz.stationsapp.model.SatelliteDetail
-import com.osmanacikgoz.stationsapp.model.SatellitePositionList
-import org.json.JSONArray
-import org.json.JSONObject
-import java.nio.charset.Charset
+import com.osmanacikgoz.stationsapp.model.SatelliteDetailResponse
+import com.osmanacikgoz.stationsapp.model.SatellitePositionResponse
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class StationDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityStationDetailBinding
 
-    private val stationDetailModel: ArrayList<SatelliteDetail> = ArrayList()
-    private val satellitePositionList: ArrayList<SatellitePositionList> = ArrayList()
-    private val positionsModel: ArrayList<Positions> = ArrayList()
-    private val positionList: ArrayList<PositionList> = ArrayList()
+    private var detailData: SatelliteDetailResponse.SatelliteDetail? = null
+
+    private val viewModel: StationDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout)
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_station_detail)
 
+        getIntentData()
+
         initUI()
-    }
 
-    private fun initUI() {
-        showStationDetail()
-        //showSatellitePosition()
-        setDetailView()
-    }
+        detailData?.id?.let { mId ->
+            val satellitePosition = getPositionById(mId.toString())
 
-    private fun showStationDetail() {
-        val satelliteId = intent.getIntExtra("id", 1)
-        val stationDetailObject = JSONArray(loadFromSatelliteDetailAsset())
-        val stationDetail = stationDetailObject.getJSONObject(satelliteId)
-        val costPerLaunch = stationDetail.getInt("cost_per_launch")
-        val firstFlight = stationDetail.getString("first_flight")
-        val height = stationDetail.getInt("height")
-        val mass = stationDetail.getInt("mass")
-        val stationDetailList =
-            SatelliteDetail(satelliteId, costPerLaunch, firstFlight, height, mass)
-        stationDetailModel.add(stationDetailList)
-
-    }
-
-    private fun showSatellitePosition() {
-        val positionXY = JSONObject(loadFromSatellitePosition())
-        val positionX = positionXY.getDouble("posX")
-        val positionY = positionXY.getDouble("posY")
-        val positionsArray = Positions(positionX, positionY)
-        positionsModel.add(positionsArray)
-        val satelliteId = intent.getIntExtra("id", 1)
-        positionXY.getJSONArray("positions")
-        val positionIdList = SatellitePositionList(satelliteId.toString(), positionsModel)
-        satellitePositionList.add(positionIdList)
-        positionXY.getJSONArray("list")
-        val positionsList = PositionList(satellitePositionList)
-        positionList.add(positionsList)
-    }
-
-    private fun loadFromSatellitePosition(): String {
-        val json: String?
-        val charset: Charset = Charsets.UTF_8
-        val positionAsset = assets.open("positions.json")
-        val size = positionAsset.available()
-        val buffer = ByteArray(size)
-        positionAsset.read(buffer)
-        positionAsset.close()
-        json = String(buffer, charset)
-
-        return json
-    }
-
-    private fun loadFromSatelliteDetailAsset(): String {
-        val json: String?
-        val charset: Charset = Charsets.UTF_8
-        val openDetailAsset = assets.open("satellite-detail.json")
-        val size = openDetailAsset.available()
-        val buffer = ByteArray(size)
-        openDetailAsset.read(buffer)
-        openDetailAsset.close()
-        json = String(buffer, charset)
-
-        return json
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun setDetailView() {
-        stationDetailModel[0].let {
-            with(binding) {
-                val intentStationName = intent.getStringExtra("name")
-                this.stationName.text = intentStationName
-                this.tvDate.text = it.firstFlight
-                this.tvHeightMassValue.text = it.height.toString() + "/" + it.mass
-                this.costValue.text = it.costPerLaunch.toString()
-
+            satellitePosition?.positions?.let {
+                lifecycleScope.launch {
+                    viewModel.getPositionFlow(it).collect { position ->
+                        val positionsSatellite = position.posX.toString()+","+position.posY
+                        binding.positionValue.text = positionsSatellite
+                        binding.progress.visibility = View.GONE
+                    }
+                }
             }
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun setPosition(position:Int) {
-        positionList[position].list[position].positions[position].let {
-            with(binding) {
-                this.positionValue.text = it.posX.toString() + "," + it.posY
-            }
+    private fun loadFromPositionAsset(): String {
+        return assets.readJson("positions.json")
+    }
+
+    private fun getPositionById(id: String): SatellitePositionResponse.SatellitePosition? {
+        val data = loadFromPositionAsset()
+        val response = Gson().fromJson(data, SatellitePositionResponse::class.java)
+        return response.list.find { it.id == id }
+    }
+
+    private fun getIntentData() {
+        detailData = intent.getParcelableExtra("satelliteDetail")
+    }
+
+    private fun initUI() {
+        setView()
+    }
+
+
+    private fun setView() {
+        with(binding) {
+            stationName.text = detailData?.stationName
+
+            val heightMass = detailData?.height.toString() + "/" + detailData?.mass
+            tvHeightMassValue.text = heightMass
+
+            tvCostValue.text = detailData?.costPerLaunch?.toString()
+
+            tvDate.text = detailData?.firstFlight?.dateConverter()
         }
     }
 }

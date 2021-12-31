@@ -2,7 +2,6 @@ package com.osmanacikgoz.stationsapp.ui.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
 import com.osmanacikgoz.stationsapp.R
 import com.osmanacikgoz.stationsapp.base.BaseViewHolder
 import com.osmanacikgoz.stationsapp.base.bindings

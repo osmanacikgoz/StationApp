@@ -7,7 +7,7 @@ import com.osmanacikgoz.stationsapp.model.Satellite
 
 class StationAdapter(
     private val setClickListeners: (item: Satellite, position: Int) -> Unit
-    ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
+) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
     private var satellites = emptyList<Satellite>()
 
@@ -17,14 +17,14 @@ class StationAdapter(
 
     override fun getItemCount(): Int = satellites.size
 
-    fun setData(data:List<Satellite>) {
+    fun setData(data: List<Satellite>) {
         satellites = data
         notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         val satellite = satellites[position]
-        when(holder) {
+        when (holder) {
             is StationHolder -> holder.bind(satellite, position, setClickListeners)
         }
     }

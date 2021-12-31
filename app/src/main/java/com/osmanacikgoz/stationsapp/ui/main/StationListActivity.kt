@@ -2,13 +2,14 @@ package com.osmanacikgoz.stationsapp.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
 import com.osmanacikgoz.stationsapp.R
 import com.osmanacikgoz.stationsapp.base.readJson
-import com.osmanacikgoz.stationsapp.databinding.ActivityMainBinding
+import com.osmanacikgoz.stationsapp.databinding.ActivityStationListBinding
 import com.osmanacikgoz.stationsapp.model.Satellite
 import com.osmanacikgoz.stationsapp.model.SatelliteDetailResponse
 import com.osmanacikgoz.stationsapp.ui.detail.StationDetailActivity
@@ -16,20 +17,17 @@ import org.json.JSONArray
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MainActivity : AppCompatActivity() {
+class StationListActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-
+    private lateinit var binding: ActivityStationListBinding
 
     private val stationListModel: ArrayList<Satellite> = ArrayList()
 
     private var stationAdapter: StationAdapter? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_station_list)
         initUI()
     }
 
@@ -47,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                 stationName = satellite.name
             }
 
-            val intent = Intent(this@MainActivity, StationDetailActivity::class.java)
+            val intent = Intent(this@StationListActivity, StationDetailActivity::class.java)
             intent.putExtra("satelliteDetail", stationDetailData)
             startActivity(intent)
         }
@@ -55,6 +53,7 @@ class MainActivity : AppCompatActivity() {
         stationAdapter?.setData(stationListModel)
 
         binding.rvStationList.adapter = stationAdapter
+        binding.progress.visibility = View.GONE
     }
 
     private fun loadFromSatelliteDetailAsset(): String {
@@ -80,7 +79,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupSearch(search: String) {
-        val filteredStations = stationListModel.filter { it.name.contains(search) }
+        val filteredStations =
+            stationListModel.filter { it.name.toLowerCase().contains(search.toLowerCase()) }
         stationAdapter?.setData(filteredStations)
     }
 
@@ -94,6 +94,7 @@ class MainActivity : AppCompatActivity() {
             val stationsList = Satellite(stationName, active, id)
             stationListModel.add(stationsList)
         }
+
 
     }
 
