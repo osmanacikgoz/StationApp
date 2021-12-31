@@ -1,37 +1,47 @@
 package com.osmanacikgoz.stationsapp.ui.main
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.osmanacikgoz.stationsapp.R
+import com.osmanacikgoz.stationsapp.base.BaseViewHolder
+import com.osmanacikgoz.stationsapp.base.bindings
 import com.osmanacikgoz.stationsapp.databinding.ItemListStationBinding
 import com.osmanacikgoz.stationsapp.model.Satellite
 
 class StationHolder(
-    private val binding: ItemListStationBinding,
-    listener: StationAdapter.onItemClickListener
-) : RecyclerView.ViewHolder(
-    binding.root
+    parent: ViewGroup
+) : BaseViewHolder<Satellite>(
+    LayoutInflater.from(parent.context)
+        .inflate(
+            R.layout.item_list_station,
+            parent,
+            false
+        )
 ) {
-    fun bind(station: Satellite) {
-        station.let {
-            val name = binding.tvStationName
-            name.text = it.name
-            val activeState = binding.tvActiveState
-            activeState.text = it.active.toString()
 
-            when (station.active) {
+    private val binding by bindings<ItemListStationBinding>(itemView)
+
+    override fun bind(
+        item: Satellite,
+        position: Int,
+        setOnClickListener: (model: Satellite, position: Int) -> Unit
+    ) {
+        with(binding) {
+            tvStationName.text = item.name
+            tvActiveState.text = item.active.toString()
+
+            when (item.active) {
                 true -> {
-                    binding.ivActiveState.setImageResource(R.drawable.ic_baseline_brightness_green_24)
+                    ivActiveState.setImageResource(R.drawable.ic_baseline_brightness_green_24)
                 }
                 false -> {
-                    binding.ivActiveState.setImageResource(R.drawable.ic_baseline_brightness_red_24)
+                    ivActiveState.setImageResource(R.drawable.ic_baseline_brightness_red_24)
                 }
             }
         }
-    }
-
-    init {
-        binding.listItemRoot.setOnClickListener {
-            listener.onItemClick(adapterPosition)
+        itemView.setOnClickListener {
+            setOnClickListener(item, position)
         }
     }
 }

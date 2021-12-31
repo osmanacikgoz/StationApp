@@ -1,47 +1,32 @@
 package com.osmanacikgoz.stationsapp.ui.main
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.osmanacikgoz.stationsapp.databinding.ItemListStationBinding
+import com.osmanacikgoz.stationsapp.base.BaseViewHolder
 import com.osmanacikgoz.stationsapp.model.Satellite
 
 class StationAdapter(
-    private var satellite: ArrayList<Satellite>) :
-    RecyclerView.Adapter<StationHolder>() {
+    private val setClickListeners: (item: Satellite, position: Int) -> Unit
+    ) : RecyclerView.Adapter<BaseViewHolder<*>>() {
 
-    private lateinit var mListener:onItemClickListener
-
-    interface onItemClickListener {
-        fun onItemClick(position: Int)
-    }
-
-    fun setOnClickListener(listener:onItemClickListener) {
-        mListener  =listener
-    }
+    private var satellites = emptyList<Satellite>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationHolder {
-        val binding: ItemListStationBinding =
-            ItemListStationBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        return StationHolder(binding,mListener)
+        return StationHolder(parent)
     }
 
-    override fun onBindViewHolder(holder: StationHolder, position: Int) {
-        holder.bind(satellite[position])
-    }
+    override fun getItemCount(): Int = satellites.size
 
-    override fun getItemCount(): Int {
-        return satellite.size
-    }
-
-    fun filterList(filter:ArrayList<Satellite>) {
-        satellite = filter
+    fun setData(data:List<Satellite>) {
+        satellites = data
         notifyDataSetChanged()
     }
 
+    override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
+        val satellite = satellites[position]
+        when(holder) {
+            is StationHolder -> holder.bind(satellite, position, setClickListeners)
+        }
+    }
 
 }

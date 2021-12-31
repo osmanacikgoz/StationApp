@@ -18,6 +18,7 @@
             android:drawableStart="@drawable/ic_baseline_search_24"
             android:drawablePadding="12dp"
             android:hint="Ara"
+            android:inputType="textCapSentences|textAutoCorrect"
             android:paddingLeft="20dp"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
